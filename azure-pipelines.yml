@@ -10,10 +10,19 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: SonarCloudPrepare@2
+  inputs:
+    SonarCloud: 'sonarcloud'
+    organization: 'devcodequality'
+    scannerMode: 'MSBuild'
+    projectKey: 'devcodequality'
+  displayName: 'Prepare sonar cloud'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: SonarCloudAnalyze@2
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+- task: SonarCloudPublish@2
+  inputs:
+    pollingTimeoutSec: '300'
+
+
